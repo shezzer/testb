@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xmlns:aop="http://www.springframework.org/schema/aop"
+        xmlns:tx="http://www.springframework.org/schema/tx"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd">
+<bean id="checkImg" class="com.blog.action.CheckImg" scope="prototype"></bean>
+<bean id="login" class="com.blog.action.Login" scope="prototype">
+	<property name="userService" ref="userService"/>
+</bean>
+<bean id="register" class="com.blog.action.Register" scope="prototype">
+	<property name="userService" ref="userService"/>
+</bean>
+<bean id="editBlogInfo" class="com.blog.action.EditBlogInfo" scope="prototype">
+	<property name="blogInfoService" ref="blogInfoService"></property>
+</bean>
+<bean id="getBlogInfo" class="com.blog.action.GetBlogInfo" scope="prototype">
+	<property name="blogInfoService" ref="blogInfoService"></property>
+</bean>
+<bean id="addArticle" class="com.blog.action.AddArticle" scope="prototype">
+	<property name="articleService" ref="articleService"></property>
+</bean>
+<bean id="showUserAllArticle" class="com.blog.action.ShowUserAllArticle" scope="prototype">
+	<property name="articleService" ref="articleService"></property>
+</bean>
+<bean id="showAllArticle" class="com.blog.action.ShowAllArticle" scope="prototype">
+	<property name="articleService" ref="articleService"></property>
+	<property name="criticismService" ref="criticismService"></property>
+</bean>
+<bean id="showArticleCon" class="com.blog.action.ShowArticleCon" scope="prototype">
+	<property name="articleService" ref="articleService"></property>
+	<property name="clickService" ref="clickService"></property>
+	<property name="criticismService" ref="criticismService"></property>
+</bean>
+<bean id="addCriticism" class="com.blog.action.AddCriticism" scope="prototype">
+	<property name="criticismService" ref="criticismService"></property>
+</bean>
+<bean id="updateArticle" class="com.blog.action.UpdateArticle" scope="prototype">
+	<property name="articleService" ref="articleService"></property>
+</bean>
+<bean id="deleteArticle" class="com.blog.action.DeleteArticle" scope="prototype">
+	<property name="articleService" ref="articleService"></property>
+</bean>
+<!-- 配置业务层的类 -->
+<bean id="userService" class="com.blog.service.UserServiceImpl">
+	<property name="userDao" ref="userDao"/>
+</bean>
+<bean id="blogInfoService" class="com.blog.service.BlogInfoServiceImpl">
+	<property name="blogInfoDao" ref="blogInfoDao"></property>
+</bean>
+<bean id="articleService" class="com.blog.service.ArticleServiceImpl">
+	<property name="articleDao" ref="articleDao"></property>
+	<property name="criticismDao" ref="criticismDao"></property>
+</bean>
+<bean id="clickService" class="com.blog.service.ClickServiceImpl">
+	<property name="clickDao" ref="clickDao"></property>
+</bean>
+<bean id="criticismService" class="com.blog.service.CriticismServiceImpl">
+	<property name="criticismDao" ref="criticismDao"></property>
+</bean>
+<!-- 配置DAO的类 -->
+<bean id="userDao" class="com.blog.dao.UserDaoImpl">
+	<property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+<bean id="blogInfoDao" class="com.blog.dao.BlogInfoDaoImpl">
+	<property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+<bean id="articleDao" class="com.blog.dao.ArticleDaoImpl">
+	<property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+<bean id="clickDao" class="com.blog.dao.ClickDaoImpl">
+	<property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+<bean id="criticismDao" class="com.blog.dao.CriticismDaoImpl">
+	<property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+<!--配置事务管理器  -->
+<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+	<property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+<!-- 开启注解事务 -->
+<tx:annotation-driven transaction-manager="transactionManager"/>
+<!-- 引入外部属性文件 -->
+<context:property-placeholder location="classpath:jdbc.properties"/>
+<!-- 配置连接池 -->
+<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+	<property name="driverClass" value="${jdbc.driverClass}"/>
+	<property name="jdbcUrl" value="${jdbc.url}"/>
+	<property name="user" value="${jdbc.username}"/>
+	<property name="password" value="${jdbc.password}"/>
+</bean>
+<!-- 配置hibernate相关属性 -->
+<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+	<!-- 注入连接池 -->
+	<property name="dataSource" ref="dataSource"/>
+	<!-- 配置hibernate的属性 -->
+	<property name="hibernateProperties">
+		<props>
+			<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+			<prop key="hibernate.show_sql">true</prop>
+			<prop key="hibernate.format_sql">true</prop>
+			<prop key="hibernate.hbm2ddl.auto">update</prop>
+		</props>
+	</property>
+	<!-- 加载hibernate中的映射文件 -->
+	<property name="mappingResources">
+		<list>
+			<value>com/blog/domain/user.hbm.xml</value>
+			<value>com/blog/domain/blogInfo.hbm.xml</value>
+			<value>com/blog/domain/article.hbm.xml</value>
+			<value>com/blog/domain/click.hbm.xml</value>
+			<value>com/blog/domain/criticism.hbm.xml</value>
+		</list>
+	</property>
+</bean>
+</beans>

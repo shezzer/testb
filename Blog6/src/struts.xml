@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<constant name="struts.i18n.encoding" value="utf-8"></constant>
+	<package name="default"  extends="struts-default" namespace="/">
+		<action name="checkImg" class="checkImg"></action>
+		<action name="register" class="register" method="register">
+			<result name="success">/login.jsp</result>
+			<result name="error">/error.jsp</result>
+			<result name="input">/register.jsp</result>
+		</action>
+		<action name="login" class="login" method="login">
+			<result name="success">/success.jsp</result>
+			<result name="error">/error.jsp</result>
+			<result name="input">/login.jsp</result>
+		</action>
+		<action name="editBlogInfo" class="editBlogInfo" method="edit">
+			<result name="success" type="chain">
+				<param name="actionName">getBlogInfo</param>
+				<param name="namespace">/</param>
+			</result>
+			<result name="error">/error.jsp</result>
+			<result name="input">/user/editbloginfo.jsp</result>
+		</action>
+		
+		<action name="getBlogInfo" class="getBlogInfo" method="get">
+			<result name="success">/user/editbloginfo.jsp</result>
+			<result name="error">/error.jsp</result>
+		</action>
+		<action name="addArticle" class="addArticle" method="addArticle">
+			<result name="success" type="chain">
+				<param name="actionName">showUserAllArticle</param>
+				<param name="namespace">/</param>
+			</result>
+			<result name="error">/error.jsp</result>
+		</action>
+		<action name="showUserAllArticle" class="showUserAllArticle" method="showUserAllArticle">
+			<result name="success">/user/showUserAllArticle.jsp</result>
+		</action>
+		<action name="showAllArticle" class="showAllArticle" method="showAllArticle">
+			<result name="success">/showAllArticle.jsp</result>
+		</action>
+		<action name="showArticleCon" class="showArticleCon" method="showArticleCon">
+			<result name="success">/user/showArticle.jsp</result>
+		</action>
+		<action name="addCriticism" class="addCriticism" method="addCriticism">
+			<result name="success" type="chain">
+				<param name="actionName">showArticleCon</param>
+				<param name="namespace">/</param>
+			</result>
+		</action>
+		<action name="updateArticle" class="updateArticle" method="updateArticle">
+			<result name="success" type="chain">
+				<param name="actionName">showUserAllArticle</param>
+				<param name="namespace">/</param>
+			</result>
+			<result name="error">/error.jsp</result>
+		</action>
+		<action name="deleteArticle" class="deleteArticle" method="deleteArticle">
+			<result name="success" type="chain">
+				<param name="actionName">showUserAllArticle</param>
+				<param name="namespace">/</param>
+			</result>
+			<result name="error">/error.jsp</result>
+		</action>
+	</package>
+</struts>
